@@ -62,7 +62,7 @@ public class CraftChickenRecipe extends IForgeRegistryEntry.Impl<IRecipe> implem
 	
 	@Override
 	public ItemStack getRecipeOutput() {
-		return new ItemStack(Items.DIAMOND); //TODO
+		return ItemStack.EMPTY;
 	}
 	
 	@Override
