@@ -1,0 +1,16 @@
+[
+{
+  "modid": "chickennugget",
+  "name": "Chicken Nugget",
+  "description": "Adds a chicken nugget.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["quaternary"],
+  "credits": "This is neptunepink's fault even though it's really not.",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
