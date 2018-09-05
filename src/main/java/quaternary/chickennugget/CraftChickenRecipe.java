@@ -28,29 +28,28 @@ public class CraftChickenRecipe extends IForgeRegistryEntry.Impl<IRecipe> implem
 	
 	@Override
 	public ItemStack getCraftingResult(InventoryCrafting inv) {
-		//Anyway this is really stupid and sideeffecty so i'm wrapping it in a try catch
-		//What could POSSIBLY go wrong???
-		try {
-			//Access transformers 5 annoying 27 me
-			Container container = ReflectionHelper.getPrivateValue(InventoryCrafting.class, inv, "eventHandler", "field_70465_c");
-			if(container == null || !(container instanceof ContainerWorkbench)) return ItemStack.EMPTY;
-			ContainerWorkbench table = (ContainerWorkbench) container;
-			
-			BlockPos pos = ReflectionHelper.getPrivateValue(ContainerWorkbench.class, table, "pos", "field_178145_h");
-			World world = ReflectionHelper.getPrivateValue(ContainerWorkbench.class, table, "world", "field_75161_g");
-			EntityPlayerMP player = ReflectionHelper.getPrivateValue(ContainerWorkbench.class, table, "player", "field_192390_i");
-				
-			for(int i = 0; i < 9; i++) {
-				table.craftMatrix.getStackInSlot(i).shrink(1);
-				//Manually sync the slot since vanilla doesn't feel like doing it apparently
+		//Anyway this is really stupid and sideeffecty.
+		//Access transformers 5 annoying 27 me
+		Container container = ReflectionHelper.getPrivateValue(InventoryCrafting.class, inv, "eventHandler", "field_70465_c");
+		if(container == null || !(container instanceof ContainerWorkbench)) return ItemStack.EMPTY;
+		ContainerWorkbench table = (ContainerWorkbench) container;
+		
+		BlockPos pos = ReflectionHelper.getPrivateValue(ContainerWorkbench.class, table, "pos", "field_178145_h");
+		World world = ReflectionHelper.getPrivateValue(ContainerWorkbench.class, table, "world", "field_75161_g");
+		if(pos == null || world == null) return ItemStack.EMPTY; //both are needed to spawn the chicken
+		
+		EntityPlayerMP player = ReflectionHelper.getPrivateValue(ContainerWorkbench.class, table, "player", "field_192390_i");
+		
+		for(int i = 0; i < 9; i++) {
+			table.craftMatrix.getStackInSlot(i).shrink(1);
+			//Manually sync the slot since vanilla doesn't feel like doing it, apparently
+			if(player != null) {
 				player.connection.sendPacket(new SPacketSetSlot(player.currentWindowId, i + 1, table.craftMatrix.getStackInSlot(i)));
 			}
-			
-			if(!world.isRemote) {
-				ChickenNuggetCommonEvents.markPositionAsNeedingNewChicken(world, pos);
-			}
-		} catch (Exception oof) {
-			ChickenNugget.LOGGER.error("There was a weird problem with the chicken crafting recipe..??? Report this", oof);
+		}
+		
+		if(!world.isRemote) {
+			ChickenNuggetCommonEvents.markPositionAsNeedingNewChicken(world, pos);
 		}
 		
 		return ItemStack.EMPTY;
