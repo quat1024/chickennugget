@@ -1,2 +1,5 @@
 item.chickennugget.chicken_nugget.name=Raw Chicken Nugget
 item.chickennugget.chicken_nugget_cooked.name=Chicken Nugget
+
+chickennugget.jei.craft_chicken.title=Chicken Crafting
+chickennugget.jei.craft_nugget.title=Chicken Decomposition

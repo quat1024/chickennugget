@@ -28,8 +28,15 @@ minecraft {
     replace "GRADLE:VERSION", project.version
 }
 
+repositories {
+    maven {
+        url = "http://dvs1.progwml6.com/files/maven"
+    }
+}
+
 dependencies {
-    // Wow
+    deobfProvided "mezz.jei:jei_1.12.2:4.11.0.212:api"
+    runtime "mezz.jei:jei_1.12.2:4.11.0.212"
 }
 
 processResources {
