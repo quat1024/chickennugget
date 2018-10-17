@@ -7,7 +7,9 @@ import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
 import mezz.jei.api.JEIPlugin;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
+import mezz.jei.api.recipe.transfer.IRecipeTransferRegistry;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.ContainerWorkbench;
 import net.minecraft.item.ItemStack;
 
 import java.util.Collections;
@@ -31,5 +33,8 @@ public class ChickenNuggetJEIPlugin implements IModPlugin {
 		
 		registry.addRecipes(Collections.singletonList(new RecipeWrapperCraftNugget()), RecipeCategoryCraftNugget.UID);
 		registry.addRecipes(Collections.singletonList(new RecipeWrapperCraftChicken()), RecipeCategoryCraftChicken.UID);
+		
+		IRecipeTransferRegistry recipeTransferRegistry = registry.getRecipeTransferRegistry();
+		recipeTransferRegistry.addRecipeTransferHandler(ContainerWorkbench.class, RecipeCategoryCraftChicken.UID, 1, 9, 10, 36);
 	}
 }

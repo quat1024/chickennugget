@@ -14,6 +14,9 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 public class CraftChickenRecipe extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe {
+	//Craft up to 64 chickens at once
+	public static final int MAXIMUM_CHICKENS_CRAFTED = 64;
+	
 	@Override
 	public boolean matches(InventoryCrafting inv, World world) {
 		int nugCount = 0;
@@ -40,8 +43,16 @@ public class CraftChickenRecipe extends IForgeRegistryEntry.Impl<IRecipe> implem
 		
 		EntityPlayerMP player = ReflectionHelper.getPrivateValue(ContainerWorkbench.class, table, "player", "field_192390_i");
 		
+		//Check minimum number of items in table
+		int chickenCount = MAXIMUM_CHICKENS_CRAFTED;
 		for(int i = 0; i < 9; i++) {
-			table.craftMatrix.getStackInSlot(i).shrink(1);
+			if(table.craftMatrix.getStackInSlot(i).getCount() < chickenCount) {
+				chickenCount = table.craftMatrix.getStackInSlot(i).getCount();
+			}
+		}
+		
+		for(int i = 0; i < 9; i++) {
+			table.craftMatrix.getStackInSlot(i).shrink(chickenCount);
 			//Manually sync the slot since vanilla doesn't feel like doing it, apparently
 			if(player != null) {
 				player.connection.sendPacket(new SPacketSetSlot(player.currentWindowId, i + 1, table.craftMatrix.getStackInSlot(i)));
@@ -49,7 +60,9 @@ public class CraftChickenRecipe extends IForgeRegistryEntry.Impl<IRecipe> implem
 		}
 		
 		if(!world.isRemote) {
-			ChickenNuggetCommonEvents.markPositionAsNeedingNewChicken(world, pos);
+			for(int j = 0; j < chickenCount; j++) {
+				ChickenNuggetCommonEvents.markPositionAsNeedingNewChicken(world, pos);
+			}
 		}
 		
 		return ItemStack.EMPTY;
