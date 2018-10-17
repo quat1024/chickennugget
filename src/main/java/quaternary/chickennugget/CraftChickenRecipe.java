@@ -60,9 +60,7 @@ public class CraftChickenRecipe extends IForgeRegistryEntry.Impl<IRecipe> implem
 		}
 		
 		if(!world.isRemote) {
-			for(int j = 0; j < chickenCount; j++) {
-				ChickenNuggetCommonEvents.markPositionAsNeedingNewChicken(world, pos);
-			}
+			ChickenNuggetCommonEvents.markPositionAsNeedingNewChickens(world, pos, chickenCount);
 		}
 		
 		return ItemStack.EMPTY;
