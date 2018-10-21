@@ -5,3 +5,7 @@ item.chickennugget.chicken_nugget_cooked.name=Chicken Nugget
 
 chickennugget.jei.craft_chicken.title=Chicken Crafting
 chickennugget.jei.craft_nugget.title=Chicken Decomposition
+
+fluid.chicken=Molten Chicken
+chickennugget.jei.cast_chicken.title=Chicken Casting
+chickennugget.jei.melt_chicken.title=Chicken Melting

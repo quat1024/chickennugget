@@ -43,7 +43,7 @@ public class RecipeCategoryCraftNugget implements IRecipeCategory<RecipeWrapperC
 	
 	@Override
 	public void drawExtras(Minecraft minecraft) {
-		RenderingWeirdness.drawChicken(45, 40);
+		RenderingWeirdness.drawChicken(45, 40, false);
 		RenderingWeirdness.drawCraftingTable(24, 30);
 	}
 }

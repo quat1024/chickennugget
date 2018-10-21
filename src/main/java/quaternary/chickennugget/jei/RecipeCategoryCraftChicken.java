@@ -46,6 +46,6 @@ public class RecipeCategoryCraftChicken implements IRecipeCategory<RecipeWrapper
 	
 	@Override
 	public void drawExtras(Minecraft mc) {
-		RenderingWeirdness.drawChicken(120, 50);
+		RenderingWeirdness.drawChicken(120, 50, false);
 	}
 }
