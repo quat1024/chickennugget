@@ -7,6 +7,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import quaternary.chickennugget.ChickenNuggetCommonEvents;
+import quaternary.chickennugget.ChickenNuggetCommonEvents.SpawnType;
 import slimeknights.tconstruct.library.smeltery.CastingRecipe;
 import slimeknights.tconstruct.library.smeltery.ICastingRecipe;
 import slimeknights.tconstruct.smeltery.events.TinkerCastingEvent;
@@ -24,10 +25,10 @@ public class ChickenCastingRecipe implements ICastingRecipe {
 
 	@SubscribeEvent
 	public void castedChicken(TinkerCastingEvent.OnCasted event) {
-		if (event.recipe == this && event.tile != null) {
+		if (equals(event.recipe) && event.tile != null) {
 			World world = event.tile.getWorld();
 			if(!world.isRemote) {
-				ChickenNuggetCommonEvents.markPositionAsNeedingNewChickenCast(world, event.tile.getPos());
+				ChickenNuggetCommonEvents.markPositionAsNeedingNewChickens(world, event.tile.getPos(), 1, SpawnType.CASTED);
 			}
 		}
 	}
