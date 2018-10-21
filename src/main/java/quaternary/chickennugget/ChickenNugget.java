@@ -10,6 +10,7 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -72,4 +73,10 @@ public class ChickenNugget {
 		
 		reg.register(new CraftChickenRecipe().setRegistryName(new ResourceLocation(MODID, "craft_chicken")));
 	}
+	
+	@SubscribeEvent
+    public static void onTextureStitch(TextureStitchEvent.Pre event){
+		// is there a better way to do this?
+        event.getMap().registerSprite(new ResourceLocation(MODID, "fluid_chicken"));
+    }
 }

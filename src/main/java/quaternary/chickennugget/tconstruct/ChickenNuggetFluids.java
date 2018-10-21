@@ -1,6 +1,5 @@
 package quaternary.chickennugget.tconstruct;
 
-import java.awt.Color;
 import java.util.Collections;
 
 import mezz.jei.api.IModRegistry;
@@ -13,6 +12,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
+import quaternary.chickennugget.ChickenNugget;
 import quaternary.chickennugget.ChickenNuggetItems;
 import slimeknights.tconstruct.library.TinkerRegistry;
 import slimeknights.tconstruct.smeltery.TinkerSmeltery;
@@ -26,9 +26,7 @@ public final class ChickenNuggetFluids {
 		public static final String CHICKEN_FLUID = "chicken";
 	}
 	
-	private static final Color FLUID_COLOR = new Color(255, 237, 229);
-	
-	public static final Fluid CHICKEN_FLUID = new Fluid(RegistryNames.CHICKEN_FLUID, new ResourceLocation("tconstruct:blocks/fluids/molten_metal"), new ResourceLocation("tconstruct:blocks/fluids/molten_metal_flow"), FLUID_COLOR);
+	public static final Fluid CHICKEN_FLUID = new Fluid(RegistryNames.CHICKEN_FLUID, new ResourceLocation(ChickenNugget.MODID, "fluid_chicken"), new ResourceLocation(ChickenNugget.MODID, "fluid_chicken"));
 	
 	public void registerFluids() {
 		FluidRegistry.registerFluid(CHICKEN_FLUID);
