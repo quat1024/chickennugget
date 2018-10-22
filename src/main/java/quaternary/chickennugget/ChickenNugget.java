@@ -77,6 +77,6 @@ public class ChickenNugget {
 	@SubscribeEvent
     public static void onTextureStitch(TextureStitchEvent.Pre event){
 		// is there a better way to do this?
-        event.getMap().registerSprite(new ResourceLocation(MODID, "fluid_chicken"));
+		event.getMap().registerSprite(new ResourceLocation(MODID, "fluid_chicken"));
     }
 }
