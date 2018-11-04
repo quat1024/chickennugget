@@ -17,7 +17,7 @@ public class RenderingWeirdness {
 	
 	private static final EntityChicken chicky = new EntityChicken(null);
 	
-	public static void drawChicken(int x, int y) {
+	public static void drawChicken(int x, int y, boolean small) {
 		Minecraft mc = Minecraft.getMinecraft();
 		chicky.world = mc.world;
 		
@@ -26,7 +26,11 @@ public class RenderingWeirdness {
 		GlStateManager.pushMatrix();
 		GlStateManager.enableColorMaterial();
 		GlStateManager.translate(x, y, 120);
-		GlStateManager.scale(40, -40, 40);
+		if (small) {
+			GlStateManager.scale(20, -20, 20);
+		} else {
+			GlStateManager.scale(40, -40, 40);
+		}
 		GlStateManager.rotate(30f, 1f, 0f, 0f);
 		GlStateManager.rotate(45f, 0f, 1f, 0f);
 		RenderHelper.enableStandardItemLighting();

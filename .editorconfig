@@ -1,0 +1,14 @@
+# EditorConfig is awesome: http://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+# Indentation
+[*]
+indent_style = tab
+indent_size = 4
+
+# Matches build.gradle
+[{build.gradle}]
+indent_style = space
+indent_size = 4

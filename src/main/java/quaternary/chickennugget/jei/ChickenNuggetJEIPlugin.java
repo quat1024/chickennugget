@@ -1,8 +1,8 @@
 package quaternary.chickennugget.jei;
 
-import com.google.common.collect.ImmutableList;
+import java.util.Collections;
+
 import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.IJeiRuntime;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
 import mezz.jei.api.JEIPlugin;
@@ -11,8 +11,7 @@ import mezz.jei.api.recipe.transfer.IRecipeTransferRegistry;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.ContainerWorkbench;
 import net.minecraft.item.ItemStack;
-
-import java.util.Collections;
+import quaternary.chickennugget.tconstruct.TConstructCompat;
 
 @JEIPlugin
 public class ChickenNuggetJEIPlugin implements IModPlugin {
@@ -20,19 +19,21 @@ public class ChickenNuggetJEIPlugin implements IModPlugin {
 	
 	@Override
 	public void registerCategories(IRecipeCategoryRegistration registry) {
+		guiHelper = registry.getJeiHelpers().getGuiHelper();
+		
 		registry.addRecipeCategories(new RecipeCategoryCraftNugget());
 		registry.addRecipeCategories(new RecipeCategoryCraftChicken());
+		TConstructCompat.registerJEIRecipeCategories(registry);
 	}
 	
 	@Override
 	public void register(IModRegistry registry) {
-		guiHelper = registry.getJeiHelpers().getGuiHelper();
-		
 		registry.addRecipeCatalyst(new ItemStack(Blocks.CRAFTING_TABLE), RecipeCategoryCraftNugget.UID);
 		registry.addRecipeCatalyst(new ItemStack(Blocks.CRAFTING_TABLE), RecipeCategoryCraftChicken.UID);
 		
 		registry.addRecipes(Collections.singletonList(new RecipeWrapperCraftNugget()), RecipeCategoryCraftNugget.UID);
 		registry.addRecipes(Collections.singletonList(new RecipeWrapperCraftChicken()), RecipeCategoryCraftChicken.UID);
+		TConstructCompat.registerJEIRecipes(registry);
 		
 		IRecipeTransferRegistry recipeTransferRegistry = registry.getRecipeTransferRegistry();
 		recipeTransferRegistry.addRecipeTransferHandler(ContainerWorkbench.class, RecipeCategoryCraftChicken.UID, 1, 9, 10, 36);

@@ -1,5 +1,10 @@
 package quaternary.chickennugget;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
+
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.init.Blocks;
@@ -7,29 +12,44 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import org.apache.commons.lang3.tuple.Pair;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
 
 @Mod.EventBusSubscriber(modid = ChickenNugget.MODID)
 public class ChickenNuggetCommonEvents {
-	public static final Map<World, List<Pair<BlockPos, Integer>>> positionsNeedingChickens = new WeakHashMap<>();
+	public static enum SpawnType {
+		CRAFTED,
+		CASTED,
+		SMELTED // spooky
+	}
+
+	public static class ChickenPosition {
+		public final BlockPos pos;
+		public final int count;
+		public final SpawnType type;
+		public ChickenPosition(BlockPos pos, int count, SpawnType type) {
+			this.pos = pos;
+			this.count = count;
+			this.type = type;
+		}
+	}
+	
+	public static final Map<World, List<ChickenPosition>> positionsNeedingChickens = new WeakHashMap<>();
 	
 	public static void markPositionAsNeedingNewChickens(World world, BlockPos pos, int count) {
-		positionsNeedingChickens.computeIfAbsent(world, (w) -> new ArrayList<>(1)).add(Pair.of(pos, count));
+		markPositionAsNeedingNewChickens(world, pos, count, SpawnType.CRAFTED);
+	}
+	
+	public static void markPositionAsNeedingNewChickens(World world, BlockPos pos, int count, SpawnType type) {
+		positionsNeedingChickens.computeIfAbsent(world, (w) -> new ArrayList<>(1)).add(new ChickenPosition(pos, count, type));
 	}
 	
 	private static final String craftedTag = "CraftedChicken";
+	private static final String castedTag = "CastedChicken";
 	
 	@SubscribeEvent
 	public static void worldTick(TickEvent.WorldTickEvent e) {
@@ -42,9 +62,10 @@ public class ChickenNuggetCommonEvents {
 		int cramming = world.getGameRules().getInt("maxEntityCramming");
 		
 		if(!positionsNeedingChickens.isEmpty() && positionsNeedingChickens.containsKey(world)) {
-			for(Pair<BlockPos, Integer> pear : positionsNeedingChickens.remove(world)) {
-				BlockPos pos = pear.getLeft();
-				int count = pear.getRight();
+			for(ChickenPosition cPos : positionsNeedingChickens.remove(world)) {
+				BlockPos pos = cPos.pos;
+				int count = cPos.count;
+				SpawnType type = cPos.type;
 				
 				boolean lots = count >= cramming;
 				
@@ -55,9 +76,19 @@ public class ChickenNuggetCommonEvents {
 					double xOff = Math.cos(angle) * 0.2;
 					double zOff = Math.sin(angle) * 0.2;
 					
-					chicken.setLocationAndAngles(pos.getX() + .5 + xOff, pos.getY() + 1, pos.getZ() + .5 + zOff, 90 + (float) (angle * 180 / Math.PI), 0);
+					if(type == SpawnType.CASTED) {
+						chicken.setLocationAndAngles(pos.getX() + .5 + xOff, pos.getY(), pos.getZ() + .5 + zOff, 90 + (float) (angle * 180 / Math.PI), 0);
+					} else {
+						chicken.setLocationAndAngles(pos.getX() + .5 + xOff, pos.getY() + 1, pos.getZ() + .5 + zOff, 90 + (float) (angle * 180 / Math.PI), 0);
+					}
 					
-					chicken.addTag(craftedTag);
+					if(type == SpawnType.CRAFTED) {
+						chicken.addTag(craftedTag);
+					} else if(type == SpawnType.CASTED) {
+						chicken.motionY = 0.5;
+						chicken.noClip = true;
+						chicken.addTag(castedTag);
+					}
 					
 					if(lots) {
 						//So they don't immediately cram themselves to death lmao
@@ -74,10 +105,10 @@ public class ChickenNuggetCommonEvents {
 		}
 		
 		for(EntityChicken ent : world.getEntities(EntityChicken.class, (ent) -> true)) {
-			boolean hasTag = ent.getTags().contains(craftedTag);
+			boolean hasCraftedTag = ent.getTags().contains(craftedTag);
 			boolean onTable = world.getBlockState(ent.getPosition().down()).getBlock() == Blocks.CRAFTING_TABLE;
 			
-			if(!hasTag && onTable) {
+			if(!hasCraftedTag && onTable) {
 				boolean babby = ent.getGrowingAge() < 0;
 				
 				for(int i = 0; i < (babby ? 5 : 9); i++) {
@@ -92,8 +123,14 @@ public class ChickenNuggetCommonEvents {
 				continue;
 			}
 			
-			if(hasTag && !onTable) {
+			if(hasCraftedTag && !onTable) {
 				ent.removeTag(craftedTag);
+			}
+			
+			boolean hasCastedTag = ent.getTags().contains(castedTag);
+			if (hasCastedTag && ent.ticksExisted > 8) {
+				ent.noClip = false;
+				ent.removeTag(castedTag);
 			}
 		}
 		
