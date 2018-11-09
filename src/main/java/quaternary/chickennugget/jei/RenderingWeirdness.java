@@ -1,10 +1,6 @@
 package quaternary.chickennugget.jei;
 
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockModelRenderer;
-import net.minecraft.client.renderer.BlockModelShapes;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
@@ -20,7 +16,6 @@ public class RenderingWeirdness {
 	public static void drawChicken(int x, int y, boolean small) {
 		Minecraft mc = Minecraft.getMinecraft();
 		chicky.world = mc.world;
-		
 		
 		//Based a little bit on Just Enough Resource's gui entity renderer.
 		GlStateManager.pushMatrix();

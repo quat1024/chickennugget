@@ -11,31 +11,38 @@ import mezz.jei.api.recipe.transfer.IRecipeTransferRegistry;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.ContainerWorkbench;
 import net.minecraft.item.ItemStack;
-import quaternary.chickennugget.tconstruct.TConstructCompat;
+import quaternary.chickennugget.ChickenNugget;
+import quaternary.chickennugget.tconstruct.jei.ChickenNuggetTinkersJEIUtil;
 
 @JEIPlugin
 public class ChickenNuggetJEIPlugin implements IModPlugin {
 	public static IGuiHelper guiHelper = null;
 	
 	@Override
-	public void registerCategories(IRecipeCategoryRegistration registry) {
-		guiHelper = registry.getJeiHelpers().getGuiHelper();
+	public void registerCategories(IRecipeCategoryRegistration reg) {
+		guiHelper = reg.getJeiHelpers().getGuiHelper();
 		
-		registry.addRecipeCategories(new RecipeCategoryCraftNugget());
-		registry.addRecipeCategories(new RecipeCategoryCraftChicken());
-		TConstructCompat.registerJEIRecipeCategories(registry);
+		reg.addRecipeCategories(new RecipeCategoryCraftNugget());
+		reg.addRecipeCategories(new RecipeCategoryCraftChicken());
+		
+		if(ChickenNugget.tinkersCompat) {
+			ChickenNuggetTinkersJEIUtil.registerJEIRecipeCategories(reg);
+		}
 	}
 	
 	@Override
-	public void register(IModRegistry registry) {
-		registry.addRecipeCatalyst(new ItemStack(Blocks.CRAFTING_TABLE), RecipeCategoryCraftNugget.UID);
-		registry.addRecipeCatalyst(new ItemStack(Blocks.CRAFTING_TABLE), RecipeCategoryCraftChicken.UID);
+	public void register(IModRegistry reg) {
+		reg.addRecipeCatalyst(new ItemStack(Blocks.CRAFTING_TABLE), RecipeCategoryCraftNugget.UID);
+		reg.addRecipeCatalyst(new ItemStack(Blocks.CRAFTING_TABLE), RecipeCategoryCraftChicken.UID);
 		
-		registry.addRecipes(Collections.singletonList(new RecipeWrapperCraftNugget()), RecipeCategoryCraftNugget.UID);
-		registry.addRecipes(Collections.singletonList(new RecipeWrapperCraftChicken()), RecipeCategoryCraftChicken.UID);
-		TConstructCompat.registerJEIRecipes(registry);
+		reg.addRecipes(Collections.singletonList(new RecipeWrapperCraftNugget()), RecipeCategoryCraftNugget.UID);
+		reg.addRecipes(Collections.singletonList(new RecipeWrapperCraftChicken()), RecipeCategoryCraftChicken.UID);
 		
-		IRecipeTransferRegistry recipeTransferRegistry = registry.getRecipeTransferRegistry();
+		IRecipeTransferRegistry recipeTransferRegistry = reg.getRecipeTransferRegistry();
 		recipeTransferRegistry.addRecipeTransferHandler(ContainerWorkbench.class, RecipeCategoryCraftChicken.UID, 1, 9, 10, 36);
+		
+		if(ChickenNugget.tinkersCompat) {
+			ChickenNuggetTinkersJEIUtil.registerJEIRecipes(reg);
+		}
 	}
 }

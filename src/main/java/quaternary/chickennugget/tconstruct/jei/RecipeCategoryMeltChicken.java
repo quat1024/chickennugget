@@ -1,4 +1,4 @@
-package quaternary.chickennugget.tconstruct;
+package quaternary.chickennugget.tconstruct.jei;
 
 import mezz.jei.api.gui.IDrawable;
 import net.minecraft.client.Minecraft;
@@ -7,15 +7,15 @@ import net.minecraft.util.text.translation.I18n;
 import quaternary.chickennugget.ChickenNugget;
 import quaternary.chickennugget.jei.ChickenNuggetJEIPlugin;
 import quaternary.chickennugget.jei.RenderingWeirdness;
-import slimeknights.tconstruct.plugin.jei.casting.CastingRecipeCategory;
+import slimeknights.tconstruct.plugin.jei.smelting.SmeltingRecipeCategory;
 
-public class RecipeCategoryCastChicken extends CastingRecipeCategory {
+public class RecipeCategoryMeltChicken extends SmeltingRecipeCategory {
 	
-	public RecipeCategoryCastChicken() {
+	public RecipeCategoryMeltChicken() {
 		super(ChickenNuggetJEIPlugin.guiHelper);
 	}
 
-	public static final String UID = "chickennugget_cast_chicken";
+	public static final String UID = "chickennugget_melt_chicken";
 	
 	@Override
 	public String getUid() {
@@ -24,7 +24,7 @@ public class RecipeCategoryCastChicken extends CastingRecipeCategory {
 	
 	@Override
 	public String getTitle() {
-		return I18n.translateToLocal("chickennugget.jei.cast_chicken.title");
+		return I18n.translateToLocal("chickennugget.jei.melt_chicken.title");
 	}
 	
 	@Override
@@ -35,11 +35,11 @@ public class RecipeCategoryCastChicken extends CastingRecipeCategory {
 	@Override
 	public void drawExtras(Minecraft mc) {
 		super.drawExtras(mc);
-		RenderingWeirdness.drawChicken(120, 50, false);
+		RenderingWeirdness.drawChicken(35, 35, true);
 	}
 
 	@Override
 	public IDrawable getBackground() {
-		return ChickenNuggetJEIPlugin.guiHelper.createDrawable(new ResourceLocation(ChickenNugget.MODID, "textures/jei/casting.png"), 0, 0, 141, 61);
+		return ChickenNuggetJEIPlugin.guiHelper.createDrawable(new ResourceLocation("tconstruct", "textures/gui/jei/smeltery.png"), 0, 0, 160, 60);
 	}
 }

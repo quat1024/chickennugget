@@ -1,15 +1,16 @@
-package quaternary.chickennugget.tconstruct;
+package quaternary.chickennugget.tconstruct.jei;
 
 import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.init.Items;
 import net.minecraftforge.fluids.FluidStack;
+import quaternary.chickennugget.ChickenNuggetFluids;
 import slimeknights.mantle.util.RecipeMatch;
 import slimeknights.tconstruct.library.smeltery.MeltingRecipe;
 import slimeknights.tconstruct.plugin.jei.smelting.SmeltingRecipeWrapper;
 
 public class RecipeWrapperMeltChicken extends SmeltingRecipeWrapper {
 	public RecipeWrapperMeltChicken() {
-		super(new MeltingRecipe(RecipeMatch.of(Items.AIR, 144), ChickenNuggetFluids.CHICKEN_FLUID));
+		super(new MeltingRecipe(RecipeMatch.of(Items.AIR, 144), ChickenNuggetFluids.chickenFluid));
 	}
 
 	@Override

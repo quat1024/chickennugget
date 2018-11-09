@@ -1,5 +1,7 @@
 package quaternary.chickennugget;
 
+import net.minecraft.block.Block;
+import net.minecraftforge.fml.common.Loader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,7 +14,6 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -20,7 +21,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.IForgeRegistry;
-import quaternary.chickennugget.tconstruct.TConstructCompat;
+import quaternary.chickennugget.tconstruct.TinkersCompat;
 
 @Mod(modid = ChickenNugget.MODID, name = ChickenNugget.NAME, version = ChickenNugget.VERSION)
 @Mod.EventBusSubscriber(modid = ChickenNugget.MODID)
@@ -31,6 +32,8 @@ public class ChickenNugget {
 	
 	public static final Logger LOGGER = LogManager.getLogger(NAME);
 	
+	public static boolean tinkersCompat = false;
+	
 	public static final CreativeTabs TAB = new CreativeTabs(MODID) {
 		@SideOnly(Side.CLIENT)
 		@Override
@@ -40,15 +43,16 @@ public class ChickenNugget {
 		
 		@SideOnly(Side.CLIENT)
 		@Override
-	    public void displayAllRelevantItems(NonNullList<ItemStack> itemList) {
+		public void displayAllRelevantItems(NonNullList<ItemStack> itemList) {
 			super.displayAllRelevantItems(itemList);
-			TConstructCompat.addFluidsToList(itemList);
+			
+			ChickenNuggetFluids.populateCreativeTabWithFluids(itemList);
 		}
 	};
 	
-	// Enable the forge universal bucket
-	static {
-		FluidRegistry.enableUniversalBucket();
+	@SubscribeEvent
+	public static void blocks(RegistryEvent.Register<Block> e) {
+		ChickenNuggetFluids.registerBlocks(e.getRegistry());
 	}
 	
 	@SubscribeEvent
@@ -57,14 +61,22 @@ public class ChickenNugget {
 	}
 	
 	@Mod.EventHandler
-	public static void preInit(FMLPreInitializationEvent e) {
-		TConstructCompat.registerFluids();
+	public static void preinit(FMLPreInitializationEvent e) {
+		ChickenNuggetFluids.registerFluids();
+		
+		if(Loader.isModLoaded("tconstruct")) {
+			tinkersCompat = true;
+			TinkersCompat.preinit();
+		}
 	}
 	
 	@Mod.EventHandler
 	public static void init(FMLInitializationEvent e) {
 		FurnaceRecipes.instance().addSmeltingRecipe(new ItemStack(ChickenNuggetItems.RAW_NUGGET), new ItemStack(ChickenNuggetItems.COOKED_NUGGET), 0.1f);
-		TConstructCompat.registerTConRecipes();
+		
+		if(tinkersCompat) {
+			TinkersCompat.init();
+		}
 	}
 	
 	@SubscribeEvent
@@ -73,10 +85,4 @@ public class ChickenNugget {
 		
 		reg.register(new CraftChickenRecipe().setRegistryName(new ResourceLocation(MODID, "craft_chicken")));
 	}
-	
-	@SubscribeEvent
-    public static void onTextureStitch(TextureStitchEvent.Pre event){
-		// is there a better way to do this?
-		event.getMap().registerSprite(new ResourceLocation(MODID, "fluid_chicken"));
-    }
 }
