@@ -9,3 +9,5 @@ chickennugget.jei.craft_nugget.title=Chicken Decomposition
 fluid.chicken=Molten Chicken
 chickennugget.jei.cast_chicken.title=Chicken Casting
 chickennugget.jei.melt_chicken.title=Chicken Melting
+
+tile.chickennugget.chicken_head.name=Chicken Head

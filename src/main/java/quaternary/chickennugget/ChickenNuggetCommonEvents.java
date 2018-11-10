@@ -7,14 +7,19 @@ import java.util.WeakHashMap;
 
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.passive.EntityChicken;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -50,6 +55,7 @@ public class ChickenNuggetCommonEvents {
 	
 	private static final String craftedTag = "CraftedChicken";
 	private static final String castedTag = "CastedChicken";
+	protected static final String headlessTag = "HeadlessChicken";
 	
 	@SubscribeEvent
 	public static void worldTick(TickEvent.WorldTickEvent e) {
@@ -135,5 +141,51 @@ public class ChickenNuggetCommonEvents {
 		}
 		
 		world.profiler.endSection();
+	}
+	
+	@SubscribeEvent
+	public static void attackChicken(AttackEntityEvent e) {
+		if (!(e.getTarget() instanceof EntityChicken)) return;
+		EntityPlayer player = e.getEntityPlayer();
+		if (player.getHeldItemMainhand().getItem() instanceof ItemAxe) {
+			EntityChicken target = (EntityChicken) e.getTarget();
+			if (target.getTags().contains(headlessTag)) {
+				return; // Already been made headless
+			}
+			e.setCanceled(true);
+			World world = target.getEntityWorld();
+			if (!world.isRemote) {
+				target.addTag(headlessTag);
+				PacketUpdateChicken.syncToClients(target);
+				
+				// HORRIBLE TRIG
+				float calculatedAngle = (float) ((target.renderYawOffset + 90.0F) * (Math.PI / 180.0));
+				double posX = target.posX + (Math.cos(calculatedAngle) / 4.0);
+				double posZ = target.posZ + (Math.sin(calculatedAngle) / 4.0);
+				double posY = target.posY + 0.5;
+				EntityItem head = new EntityItem(world, posX, posY, posZ, new ItemStack(ChickenNuggetBlocks.CHICKEN_HEAD_BLOCK));
+				head.motionX = Math.cos(calculatedAngle) / 6.0F;
+				head.motionZ = Math.sin(calculatedAngle) / 6.0F;
+				head.setPickupDelay(15);
+				world.spawnEntity(head);
+				
+				// pop!
+				world.playSound(null, posX, posY, posZ, SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.NEUTRAL, .5f, 1.0F);
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void chickenJoinedWorld(EntityJoinWorldEvent e) {
+		if (e.getEntity() instanceof EntityChicken && e.getEntity().getTags().contains(headlessTag)) {
+			PacketUpdateChicken.syncToClients((EntityChicken) e.getEntity());
+		}
+	}
+
+	@SubscribeEvent
+	public static void playerStartedTrackingChicken(PlayerEvent.StartTracking e) {
+		if (e.getTarget() instanceof EntityChicken && e.getTarget().getTags().contains(headlessTag)) {
+			PacketUpdateChicken.syncToClient((EntityChicken) e.getTarget(), e.getEntityPlayer());
+		}
 	}
 }

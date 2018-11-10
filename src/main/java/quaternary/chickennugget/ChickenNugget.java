@@ -52,16 +52,19 @@ public class ChickenNugget {
 	@SubscribeEvent
 	public static void blocks(RegistryEvent.Register<Block> e) {
 		ChickenNuggetFluids.registerBlocks(e.getRegistry());
+		ChickenNuggetBlocks.registerBlocks(e.getRegistry());
 	}
 	
 	@SubscribeEvent
 	public static void items(RegistryEvent.Register<Item> e) {
 		ChickenNuggetItems.registerItems(e.getRegistry());
+		ChickenNuggetBlocks.registerItems(e.getRegistry());
 	}
 	
 	@Mod.EventHandler
 	public static void preinit(FMLPreInitializationEvent e) {
 		ChickenNuggetFluids.registerFluids();
+		PacketHandler.registerMessages(MODID);
 		
 		if(Loader.isModLoaded("tconstruct")) {
 			tinkersCompat = true;
