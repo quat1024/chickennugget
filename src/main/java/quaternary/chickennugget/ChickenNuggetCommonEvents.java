@@ -55,7 +55,7 @@ public class ChickenNuggetCommonEvents {
 	
 	private static final String craftedTag = "CraftedChicken";
 	private static final String castedTag = "CastedChicken";
-	protected static final String headlessTag = "HeadlessChicken";
+	public static final String headlessTag = "HeadlessChicken";
 	
 	@SubscribeEvent
 	public static void worldTick(TickEvent.WorldTickEvent e) {
