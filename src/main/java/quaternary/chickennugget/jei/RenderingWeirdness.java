@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import quaternary.chickennugget.ChickenNuggetCommonEvents;
 
 public class RenderingWeirdness {
 	private RenderingWeirdness() {}
@@ -38,6 +39,12 @@ public class RenderingWeirdness {
 		GlStateManager.disableTexture2D();
 		GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
 		GlStateManager.popMatrix();
+	}
+	
+	public static void drawHeadlessChicken(int x, int y) {
+		chicky.addTag(ChickenNuggetCommonEvents.headlessTag);
+		drawChicken(x, y, false);
+		chicky.getTags().remove(ChickenNuggetCommonEvents.headlessTag);
 	}
 	
 	public static void drawCraftingTable(int x, int y) {		

@@ -12,7 +12,6 @@ import slimeknights.tconstruct.smeltery.TinkerSmeltery;
 public final class TinkersCompat {
 	public static void preinit() {
 		MinecraftForge.EVENT_BUS.register(ChickenNuggetTinkersCommonEvents.class);
-		MinecraftForge.EVENT_BUS.register(ChickenCastingRecipe.class);
 	}
 	
 	public static void init() {
