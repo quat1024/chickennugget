@@ -1,9 +1,9 @@
-package quaternary.chickennugget.jei;
+package quaternary.chickennugget.compat.jei;
 
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.item.ItemStack;
-import quaternary.chickennugget.ChickenNuggetItems;
+import quaternary.chickennugget.item.ChickenNuggetItems;
 
 public class RecipeWrapperCraftNugget implements IRecipeWrapper {
 	@Override

@@ -1,4 +1,4 @@
-package quaternary.chickennugget.tconstruct;
+package quaternary.chickennugget.compat.tconstruct;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;

@@ -1,4 +1,4 @@
-package quaternary.chickennugget.jei;
+package quaternary.chickennugget.compat.jei;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;

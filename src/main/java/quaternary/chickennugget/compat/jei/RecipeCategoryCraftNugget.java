@@ -1,16 +1,15 @@
-package quaternary.chickennugget.jei;
+package quaternary.chickennugget.compat.jei;
 
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeCategory;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
 import quaternary.chickennugget.ChickenNugget;
-import quaternary.chickennugget.ChickenNuggetItems;
+import quaternary.chickennugget.item.ChickenNuggetItems;
 
 public class RecipeCategoryCraftNugget implements IRecipeCategory<RecipeWrapperCraftNugget> {
 	public static final String UID = "chickennugget_craft_nugget";

@@ -1,12 +1,18 @@
-package quaternary.chickennugget;
+package quaternary.chickennugget.item;
 
 import javax.annotation.Nonnull;
 
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemFood;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.IForgeRegistryEntry;
+import quaternary.chickennugget.ChickenNugget;
+import quaternary.chickennugget.block.ChickenNuggetBlocks;
+
+import java.util.Objects;
 
 @GameRegistry.ObjectHolder(ChickenNugget.MODID)
 public final class ChickenNuggetItems {
@@ -25,14 +31,26 @@ public final class ChickenNuggetItems {
 	@GameRegistry.ObjectHolder(RegistryNames.COOKED_NUGGET)
 	public static final ItemFood COOKED_NUGGET = notNullISwear();
 	
-	static void registerItems(IForgeRegistry<Item> reg) {
+	@GameRegistry.ObjectHolder(ChickenNuggetBlocks.RegistryNames.CHICKEN_HEAD_BLOCK)
+	public static final ItemChickenHead CHICKEN_HEAD = notNullISwear();
+	
+	public static void registerItems(IForgeRegistry<Item> reg) {
 		registerItem(new ItemFastFood(1, 0.05f, true), RegistryNames.RAW_NUGGET, reg);
 		registerItem(new ItemFastFood(3, 0.2f, true), RegistryNames.COOKED_NUGGET, reg);
+		
+		registerItemBlock(new ItemChickenHead(ChickenNuggetBlocks.CHICKEN_HEAD_BLOCK), reg);
 	}
 	
 	private static void registerItem(Item i, String regName, IForgeRegistry<Item> reg) {
 		i.setRegistryName(new ResourceLocation(ChickenNugget.MODID, regName));
 		i.setTranslationKey(ChickenNugget.MODID + '.' + regName);
+		i.setCreativeTab(ChickenNugget.TAB);
+		
+		reg.register(i);
+	}
+	
+	private static void registerItemBlock(ItemBlock i, IForgeRegistry<Item> reg) {
+		i.setRegistryName(Objects.requireNonNull(i.getBlock().getRegistryName()));
 		i.setCreativeTab(ChickenNugget.TAB);
 		
 		reg.register(i);

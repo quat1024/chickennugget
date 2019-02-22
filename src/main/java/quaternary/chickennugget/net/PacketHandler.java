@@ -1,4 +1,4 @@
-package quaternary.chickennugget;
+package quaternary.chickennugget.net;
 
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;

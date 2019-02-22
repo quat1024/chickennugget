@@ -1,11 +1,11 @@
-package quaternary.chickennugget.jei;
+package quaternary.chickennugget.compat.jei;
 
 import com.google.common.collect.ImmutableList;
 
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.item.ItemStack;
-import quaternary.chickennugget.ChickenNuggetBlocks;
+import quaternary.chickennugget.block.ChickenNuggetBlocks;
 
 public class RecipeWrapperDecapitateChicken implements IRecipeWrapper {
 	@Override

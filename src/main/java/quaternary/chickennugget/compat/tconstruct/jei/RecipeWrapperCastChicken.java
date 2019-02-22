@@ -1,11 +1,11 @@
-package quaternary.chickennugget.tconstruct.jei;
+package quaternary.chickennugget.compat.tconstruct.jei;
 
 import com.google.common.collect.ImmutableList;
 
 import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
-import quaternary.chickennugget.tconstruct.ChickenCastingRecipe;
+import quaternary.chickennugget.compat.tconstruct.ChickenCastingRecipe;
 import slimeknights.tconstruct.plugin.jei.JEIPlugin;
 import slimeknights.tconstruct.plugin.jei.casting.CastingRecipeWrapper;
 

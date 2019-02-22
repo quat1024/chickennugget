@@ -20,7 +20,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.IForgeRegistry;
-import quaternary.chickennugget.tconstruct.TinkersCompat;
+import quaternary.chickennugget.block.ChickenNuggetBlocks;
+import quaternary.chickennugget.item.ChickenNuggetItems;
+import quaternary.chickennugget.net.PacketHandler;
+import quaternary.chickennugget.compat.tconstruct.TinkersCompat;
 
 @Mod(modid = ChickenNugget.MODID, name = ChickenNugget.NAME, version = ChickenNugget.VERSION)
 @Mod.EventBusSubscriber(modid = ChickenNugget.MODID)
@@ -58,7 +61,6 @@ public class ChickenNugget {
 	@SubscribeEvent
 	public static void items(RegistryEvent.Register<Item> e) {
 		ChickenNuggetItems.registerItems(e.getRegistry());
-		ChickenNuggetBlocks.registerItems(e.getRegistry());
 	}
 	
 	@Mod.EventHandler

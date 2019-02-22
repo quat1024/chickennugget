@@ -1,4 +1,4 @@
-package quaternary.chickennugget.jei;
+package quaternary.chickennugget.compat.jei;
 
 import java.util.Collections;
 import java.util.List;
@@ -13,13 +13,12 @@ import mezz.jei.api.JEIPlugin;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import mezz.jei.api.recipe.transfer.IRecipeTransferRegistry;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.ContainerWorkbench;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
 import quaternary.chickennugget.ChickenNugget;
-import quaternary.chickennugget.tconstruct.jei.ChickenNuggetTinkersJEIUtil;
+import quaternary.chickennugget.compat.tconstruct.jei.ChickenNuggetTinkersJEIUtil;
 
 @JEIPlugin
 public class ChickenNuggetJEIPlugin implements IModPlugin {

@@ -1,4 +1,4 @@
-package quaternary.chickennugget;
+package quaternary.chickennugget.item;
 
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;

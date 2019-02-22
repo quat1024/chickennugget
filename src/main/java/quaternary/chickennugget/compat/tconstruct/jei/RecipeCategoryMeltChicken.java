@@ -1,12 +1,12 @@
-package quaternary.chickennugget.tconstruct.jei;
+package quaternary.chickennugget.compat.tconstruct.jei;
 
 import mezz.jei.api.gui.IDrawable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
 import quaternary.chickennugget.ChickenNugget;
-import quaternary.chickennugget.jei.ChickenNuggetJEIPlugin;
-import quaternary.chickennugget.jei.RenderingWeirdness;
+import quaternary.chickennugget.compat.jei.ChickenNuggetJEIPlugin;
+import quaternary.chickennugget.compat.jei.RenderingWeirdness;
 import slimeknights.tconstruct.plugin.jei.smelting.SmeltingRecipeCategory;
 
 public class RecipeCategoryMeltChicken extends SmeltingRecipeCategory {

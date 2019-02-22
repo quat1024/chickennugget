@@ -10,6 +10,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.registries.IForgeRegistry;
+import quaternary.chickennugget.block.BlockFluidChicken;
 
 public final class ChickenNuggetFluids {
 	public static final class RegistryNames {

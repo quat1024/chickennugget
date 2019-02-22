@@ -1,4 +1,4 @@
-package quaternary.chickennugget;
+package quaternary.chickennugget.block;
 
 import javax.annotation.Nonnull;
 
@@ -7,56 +7,19 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.passive.EntityChicken;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockHeadChicken extends Block {
+public class BlockChickenHead extends Block {
 	
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 	
-	public static class Item extends ItemBlock {
-		public Item(BlockHeadChicken block) {
-			super(block);
-		}
-		
-		@Override
-		public boolean isValidArmor(ItemStack stack, EntityEquipmentSlot armorType, Entity entity) {
-			return armorType == EntityEquipmentSlot.HEAD;
-		}
-		
-		// Allow heads to be placed back onto chickens
-		@Override
-		public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer playerIn, EntityLivingBase target, EnumHand hand) {
-			if (!(target instanceof EntityChicken)) return false;
-			
-			if (target.getEntityWorld().isRemote) return false;
-
-			if (target.getTags().contains(ChickenNuggetCommonEvents.headlessTag)) {
-				target.getTags().remove(ChickenNuggetCommonEvents.headlessTag);
-				PacketUpdateChicken.syncToClients((EntityChicken) target);
-				target.getEntityWorld().playSound(null, target.posX, target.posY, target.posZ, SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.NEUTRAL, .5f, 1.0F);
-				stack.shrink(1);
-				return true;
-			} else {
-				return false;
-			}
-		}
-	}
-
-	public BlockHeadChicken() {
+	public BlockChickenHead() {
 		super(Material.SAND);
 		setHardness(0.15F);
 		setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));

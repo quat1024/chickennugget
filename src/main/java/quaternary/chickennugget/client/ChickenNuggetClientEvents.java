@@ -1,4 +1,4 @@
-package quaternary.chickennugget;
+package quaternary.chickennugget.client;
 
 import java.util.Iterator;
 
@@ -22,6 +22,12 @@ import net.minecraftforge.fluids.BlockFluidBase;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import quaternary.chickennugget.ChickenNugget;
+import quaternary.chickennugget.ChickenNuggetCommonEvents;
+import quaternary.chickennugget.ChickenNuggetFluids;
+import quaternary.chickennugget.block.ChickenNuggetBlocks;
+import quaternary.chickennugget.item.ChickenNuggetItems;
+import quaternary.chickennugget.item.ItemChickenHead;
 
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = ChickenNugget.MODID)
 public class ChickenNuggetClientEvents {
@@ -52,7 +58,7 @@ public class ChickenNuggetClientEvents {
 		boolean hasHead = false;
 		Iterator<ItemStack> iter = player.getArmorInventoryList().iterator();
 		while (iter.hasNext()) {
-			if (iter.next().getItem() instanceof BlockHeadChicken.Item) {
+			if (iter.next().getItem() instanceof ItemChickenHead) {
 				hasHead = true;
 			}
 		}

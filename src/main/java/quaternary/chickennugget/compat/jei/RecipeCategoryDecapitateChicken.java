@@ -1,4 +1,4 @@
-package quaternary.chickennugget.jei;
+package quaternary.chickennugget.compat.jei;
 
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IGuiItemStackGroup;
@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
 import quaternary.chickennugget.ChickenNugget;
-import quaternary.chickennugget.ChickenNuggetBlocks;
+import quaternary.chickennugget.block.ChickenNuggetBlocks;
 
 public class RecipeCategoryDecapitateChicken implements IRecipeCategory<RecipeWrapperDecapitateChicken> {
 	public static final String UID = "chickennugget_decapitate_chicken";

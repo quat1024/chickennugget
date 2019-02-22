@@ -1,4 +1,4 @@
-package quaternary.chickennugget.tconstruct.jei;
+package quaternary.chickennugget.compat.tconstruct.jei;
 
 import mezz.jei.api.IModRegistry;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;

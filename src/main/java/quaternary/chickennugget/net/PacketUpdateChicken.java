@@ -1,4 +1,4 @@
-package quaternary.chickennugget;
+package quaternary.chickennugget.net;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import quaternary.chickennugget.ChickenNuggetCommonEvents;
 
 public class PacketUpdateChicken implements IMessage {
 	private boolean isHeadless = false;

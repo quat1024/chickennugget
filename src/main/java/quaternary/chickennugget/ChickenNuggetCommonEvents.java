@@ -23,6 +23,9 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import quaternary.chickennugget.block.ChickenNuggetBlocks;
+import quaternary.chickennugget.item.ChickenNuggetItems;
+import quaternary.chickennugget.net.PacketUpdateChicken;
 
 @Mod.EventBusSubscriber(modid = ChickenNugget.MODID)
 public class ChickenNuggetCommonEvents {

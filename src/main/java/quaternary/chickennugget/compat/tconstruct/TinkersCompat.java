@@ -1,11 +1,11 @@
-package quaternary.chickennugget.tconstruct;
+package quaternary.chickennugget.compat.tconstruct;
 
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.FluidStack;
 import quaternary.chickennugget.ChickenNuggetFluids;
-import quaternary.chickennugget.ChickenNuggetItems;
+import quaternary.chickennugget.item.ChickenNuggetItems;
 import slimeknights.tconstruct.library.TinkerRegistry;
 import slimeknights.tconstruct.smeltery.TinkerSmeltery;
 

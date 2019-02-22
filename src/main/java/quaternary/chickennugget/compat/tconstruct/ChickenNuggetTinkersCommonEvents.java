@@ -1,4 +1,4 @@
-package quaternary.chickennugget.tconstruct;
+package quaternary.chickennugget.compat.tconstruct;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityChicken;

@@ -11,6 +11,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.registries.IForgeRegistryEntry;
+import quaternary.chickennugget.item.ChickenNuggetItems;
 
 public class CraftChickenRecipe extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe {
 	//Craft up to 64 chickens at once
