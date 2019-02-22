@@ -11,6 +11,12 @@ Known limitations: Likely only works in vanilla crafting tables. There's not muc
 
 https://twitter.com/neptunepunk/status/1037066000498274304
 
+## OTHER FEATURES
+
+* Tinkers construct integration! Melt and cast liquid chicens in your smeltery!
+* Molten chicken!
+* Chicken heads, that you can get by attacking a chicken with an axe!
+
 #### License
 
 Mozilla Public License 2.0 or any later version.
