@@ -1,10 +1,15 @@
 package quaternary.chickennugget;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.ai.EntityAIPanic;
+import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,6 +28,8 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import quaternary.chickennugget.ai.AIHelpers;
+import quaternary.chickennugget.ai.EntityAIPanicForever;
 import quaternary.chickennugget.block.ChickenNuggetBlocks;
 import quaternary.chickennugget.item.ChickenNuggetItems;
 import quaternary.chickennugget.net.PacketUpdateChicken;
@@ -177,6 +184,9 @@ public class ChickenNuggetCommonEvents {
 				
 				// pop!
 				world.playSound(null, posX, posY, posZ, SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.NEUTRAL, .5f, 1.0F);
+				
+				//make it run around like, well, like a headless chicken
+				AIHelpers.scareChickenForever(target);
 			}
 		}
 	}
@@ -184,7 +194,11 @@ public class ChickenNuggetCommonEvents {
 	@SubscribeEvent
 	public static void chickenJoinedWorld(EntityJoinWorldEvent e) {
 		if (e.getEntity() instanceof EntityChicken && e.getEntity().getTags().contains(headlessTag)) {
-			PacketUpdateChicken.syncToClients((EntityChicken) e.getEntity());
+			EntityChicken chicken = (EntityChicken) e.getEntity();
+			
+			PacketUpdateChicken.syncToClients(chicken);
+			//Reset the aitask since these are not saved to nbt
+			AIHelpers.scareChickenForever(chicken);
 		}
 	}
 
