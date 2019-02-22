@@ -1,6 +1,7 @@
 package quaternary.chickennugget;
 
 import net.minecraft.block.Block;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
@@ -34,6 +35,9 @@ public final class ChickenNuggetFluids {
 			chickenFluid.setViscosity(2000);
 			chickenFluid.setDensity(2000);
 			chickenFluid.setTemperature(600);
+			
+			chickenFluid.setEmptySound(SoundEvents.ENTITY_CHICKEN_DEATH);
+			chickenFluid.setFillSound(SoundEvents.ENTITY_CHICKEN_HURT);
 			
 			FluidRegistry.registerFluid(chickenFluid);
 			FluidRegistry.addBucketForFluid(chickenFluid);
