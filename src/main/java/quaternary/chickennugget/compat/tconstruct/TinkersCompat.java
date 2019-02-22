@@ -17,6 +17,8 @@ public final class TinkersCompat {
 	public static void init() {
 		TinkerRegistry.registerMelting(ChickenNuggetItems.RAW_NUGGET, ChickenNuggetFluids.chickenFluid, 16);
 		TinkerRegistry.registerMelting(ChickenNuggetItems.COOKED_NUGGET, ChickenNuggetFluids.chickenFluid, 16);
+		TinkerRegistry.registerMelting(ChickenNuggetItems.CHICKEN_HEAD, ChickenNuggetFluids.chickenFluid, 16);
+		
 		TinkerRegistry.registerTableCasting(new ItemStack(ChickenNuggetItems.COOKED_NUGGET), TinkerSmeltery.castNugget, ChickenNuggetFluids.chickenFluid, 16);
 		TinkerRegistry.registerBasinCasting(new ChickenCastingRecipe());
 		//144mb, killed by ChickenNuggetTinkersCommonEvents

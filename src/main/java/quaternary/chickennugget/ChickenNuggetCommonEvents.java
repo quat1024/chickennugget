@@ -115,12 +115,15 @@ public class ChickenNuggetCommonEvents {
 		
 		for(EntityChicken ent : world.getEntities(EntityChicken.class, (ent) -> true)) {
 			boolean hasCraftedTag = ent.getTags().contains(craftedTag);
+			boolean hasHeadlessTag = ent.getTags().contains(headlessTag);
 			boolean onTable = world.getBlockState(ent.getPosition().down()).getBlock() == Blocks.CRAFTING_TABLE;
 			
 			if(!hasCraftedTag && onTable) {
 				boolean babby = ent.getGrowingAge() < 0;
+				int nuggetCount = babby ? 5 : 9;
+				if(hasHeadlessTag) nuggetCount--;
 				
-				for(int i = 0; i < (babby ? 5 : 9); i++) {
+				for(int i = 0; i < nuggetCount; i++) {
 					EntityItem nug = new EntityItem(world, ent.posX, ent.posY, ent.posZ, new ItemStack(ChickenNuggetItems.RAW_NUGGET));
 					nug.motionX *= 3;
 					nug.motionZ *= 3; //lol
