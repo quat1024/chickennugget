@@ -17,7 +17,7 @@ public class PlayerLayerHeadBauble extends LayerCustomHead {
 	
 	@Override
 	public void doRenderLayer(EntityLivingBase entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-		// dodgy hack to render chicken head and other stuff at the same time
+		//dodgy hack to render chicken head and other stuff at the same time
 		if (entity instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) entity;
 			
