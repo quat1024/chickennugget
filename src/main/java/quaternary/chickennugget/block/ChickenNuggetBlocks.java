@@ -3,12 +3,10 @@ package quaternary.chickennugget.block;
 import javax.annotation.Nonnull;
 
 import net.minecraft.block.Block;
-import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 import quaternary.chickennugget.ChickenNugget;
-import quaternary.chickennugget.item.ItemChickenHead;
 
 @GameRegistry.ObjectHolder(ChickenNugget.MODID)
 public final class ChickenNuggetBlocks {

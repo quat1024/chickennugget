@@ -26,6 +26,8 @@ import quaternary.chickennugget.ChickenNugget;
 import quaternary.chickennugget.ChickenNuggetCommonEvents;
 import quaternary.chickennugget.ChickenNuggetFluids;
 import quaternary.chickennugget.block.ChickenNuggetBlocks;
+import quaternary.chickennugget.compat.baubles.BaublesHandler;
+import quaternary.chickennugget.compat.baubles.PlayerLayerHeadBauble;
 import quaternary.chickennugget.item.ChickenNuggetItems;
 import quaternary.chickennugget.item.ItemChickenHead;
 
@@ -52,6 +54,9 @@ public class ChickenNuggetClientEvents {
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(i), 0, mrl);
 	}
 	
+	private static boolean hasAddedLayer = false;
+	public static final String wearingChickenHeadTag = "wearingChickenHead";
+	
 	@SubscribeEvent
 	public static void headlessPlayers(RenderPlayerEvent.Pre e) {
 		EntityPlayer player = e.getEntityPlayer();
@@ -60,10 +65,24 @@ public class ChickenNuggetClientEvents {
 		while (iter.hasNext()) {
 			if (iter.next().getItem() instanceof ItemChickenHead) {
 				hasHead = true;
+				break;
+			}
+		}
+		if (!hasHead && ChickenNugget.baublesCompat) {
+			hasHead = BaublesHandler.wearingChickenHead(player);
+			if (hasHead && !hasAddedLayer) {
+				e.getRenderer().addLayer(new PlayerLayerHeadBauble(e.getRenderer().getMainModel().bipedHead));
+				hasAddedLayer = true;
 			}
 		}
 		
 		e.getRenderer().getMainModel().bipedHead.isHidden = hasHead;
+		
+		if (hasHead) {
+			player.addTag(wearingChickenHeadTag);
+		} else {
+			player.removeTag(wearingChickenHeadTag);
+		}
 	}
 	
 	@SubscribeEvent
