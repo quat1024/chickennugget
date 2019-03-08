@@ -35,6 +35,7 @@ public class ChickenNugget {
 	public static final Logger LOGGER = LogManager.getLogger(NAME);
 	
 	public static boolean tinkersCompat = false;
+	public static boolean baublesCompat = false;
 	
 	public static final CreativeTabs TAB = new CreativeTabs(MODID) {
 		@SideOnly(Side.CLIENT)
@@ -71,6 +72,9 @@ public class ChickenNugget {
 		if(Loader.isModLoaded("tconstruct")) {
 			tinkersCompat = true;
 			TinkersCompat.preinit();
+		}
+		if(Loader.isModLoaded("baubles")) {
+			baublesCompat = true;
 		}
 	}
 	
