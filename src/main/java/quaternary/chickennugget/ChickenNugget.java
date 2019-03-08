@@ -12,6 +12,7 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -21,9 +22,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.IForgeRegistry;
 import quaternary.chickennugget.block.ChickenNuggetBlocks;
+import quaternary.chickennugget.compat.tconstruct.TinkersCompat;
 import quaternary.chickennugget.item.ChickenNuggetItems;
 import quaternary.chickennugget.net.PacketHandler;
-import quaternary.chickennugget.compat.tconstruct.TinkersCompat;
 
 @Mod(modid = ChickenNugget.MODID, name = ChickenNugget.NAME, version = ChickenNugget.VERSION)
 @Mod.EventBusSubscriber(modid = ChickenNugget.MODID)
@@ -36,6 +37,10 @@ public class ChickenNugget {
 	
 	public static boolean tinkersCompat = false;
 	public static boolean baublesCompat = false;
+	
+	static {
+		FluidRegistry.enableUniversalBucket();
+	}
 	
 	public static final CreativeTabs TAB = new CreativeTabs(MODID) {
 		@SideOnly(Side.CLIENT)
