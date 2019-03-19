@@ -71,6 +71,7 @@ public class ItemChickenHead extends ItemBlock implements IBauble {
 	}
 	
 	@Override
+	@Optional.Method(modid = "baubles")
 	public BaubleType getBaubleType(ItemStack stack) {
 		return BaubleType.HEAD;
 	}
