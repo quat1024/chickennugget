@@ -6,7 +6,7 @@ root = true
 # Indentation
 [*]
 indent_style = tab
-indent_size = 2
+indent_size = 4
 
 # Matches build.gradle
 [{build.gradle}]
