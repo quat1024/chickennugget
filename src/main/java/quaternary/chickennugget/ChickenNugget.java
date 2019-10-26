@@ -21,7 +21,6 @@ import quaternary.chickennugget.item.ChickenNuggetItems;
 import quaternary.chickennugget.net.PacketHandler;
 
 @Mod(ChickenNugget.MODID)
-@Mod.EventBusSubscriber(modid = ChickenNugget.MODID)
 public class ChickenNugget {
 	public static final String MODID = "chickennugget";
 	private static final String NAME = "Chicken Nugget";
@@ -50,7 +49,7 @@ public class ChickenNugget {
 		}
 	}
 
-	@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+	@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = MODID)
 	public static class RegistryEvents {
 		@SubscribeEvent
 		public static void onBlocksRegistry(final RegistryEvent.Register<Block> e) {

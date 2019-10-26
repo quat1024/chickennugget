@@ -5,6 +5,7 @@ import net.minecraft.client.renderer.entity.model.RendererModel;
 import net.minecraft.entity.passive.ChickenEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -19,7 +20,7 @@ import quaternary.chickennugget.item.ItemChickenHead;
 import java.lang.reflect.Field;
 import java.util.WeakHashMap;
 
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = ChickenNugget.MODID)
 public class ChickenNuggetClientEvents {
 	private static boolean hasAddedLayer = false;
 	public static final String wearingChickenHeadTag = "wearingChickenHead";
