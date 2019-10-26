@@ -1,12 +1,7 @@
 {
-	"forge_marker": 1,
-	"variants": {
-		"normal": [{
-			"model": "forge:fluid",
-			"transform": "forge:default-item",
-			"custom": {
-				"fluid": "chicken"
-			}
-		}]
-	}
+  "variants": {
+    "": {
+      "model": "chickennugget:block/fluid_chicken"
+    }
+  }
 }

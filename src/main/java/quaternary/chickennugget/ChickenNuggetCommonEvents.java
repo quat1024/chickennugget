@@ -1,64 +1,64 @@
 package quaternary.chickennugget;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.WeakHashMap;
-
-import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.ai.EntityAIPanic;
-import net.minecraft.entity.ai.EntityAITasks;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.passive.EntityChicken;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.MobEffects;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemAxe;
+import net.minecraft.block.Blocks;
+import net.minecraft.entity.AgeableEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.passive.ChickenEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.ToolType;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import quaternary.chickennugget.ai.AIHelpers;
-import quaternary.chickennugget.ai.EntityAIPanicForever;
 import quaternary.chickennugget.block.ChickenNuggetBlocks;
 import quaternary.chickennugget.item.ChickenNuggetItems;
 import quaternary.chickennugget.net.PacketUpdateChicken;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
+
 @Mod.EventBusSubscriber(modid = ChickenNugget.MODID)
 public class ChickenNuggetCommonEvents {
-	public static enum SpawnType {
+	public enum SpawnType {
 		CRAFTED,
-		CASTED,
-		SMELTED // spooky
+		CASTED
 	}
 
 	public static class ChickenPosition {
-		public final BlockPos pos;
-		public final int count;
-		public final SpawnType type;
-		public ChickenPosition(BlockPos pos, int count, SpawnType type) {
+		final BlockPos pos;
+		final int count;
+		final SpawnType type;
+		ChickenPosition(BlockPos pos, int count, SpawnType type) {
 			this.pos = pos;
 			this.count = count;
 			this.type = type;
 		}
 	}
 	
-	public static final Map<World, List<ChickenPosition>> positionsNeedingChickens = new WeakHashMap<>();
-	
+	private static final Map<World, List<ChickenPosition>> positionsNeedingChickens = new WeakHashMap<>();
+
+	@SuppressWarnings("WeakerAccess") // TiCon integration uses this
 	public static void markPositionAsNeedingNewChickens(World world, BlockPos pos, int count) {
 		markPositionAsNeedingNewChickens(world, pos, count, SpawnType.CRAFTED);
 	}
-	
+
+	@SuppressWarnings("WeakerAccess") // TiCon integration uses this
 	public static void markPositionAsNeedingNewChickens(World world, BlockPos pos, int count, SpawnType type) {
 		positionsNeedingChickens.computeIfAbsent(world, (w) -> new ArrayList<>(1)).add(new ChickenPosition(pos, count, type));
 	}
@@ -66,16 +66,16 @@ public class ChickenNuggetCommonEvents {
 	private static final String craftedTag = "CraftedChicken";
 	private static final String castedTag = "CastedChicken";
 	public static final String headlessTag = "HeadlessChicken";
-	
+
 	@SubscribeEvent
 	public static void worldTick(TickEvent.WorldTickEvent e) {
 		if(e.phase != TickEvent.Phase.END) return;
-		World world = e.world;
 		if(e.world.isRemote) return;
+		ServerWorld world = (ServerWorld) e.world;
 		
-		world.profiler.startSection("chickennuggets");
-		
-		int cramming = world.getGameRules().getInt("maxEntityCramming");
+		world.getProfiler().startSection("chickennuggets");
+
+		int cramming = world.getGameRules().getInt(GameRules.MAX_ENTITY_CRAMMING);
 		
 		if(!positionsNeedingChickens.isEmpty() && positionsNeedingChickens.containsKey(world)) {
 			for(ChickenPosition cPos : positionsNeedingChickens.remove(world)) {
@@ -86,7 +86,11 @@ public class ChickenNuggetCommonEvents {
 				boolean lots = count >= cramming;
 				
 				for(int i = 0; i < count; i++) {
-					EntityChicken chicken = new EntityChicken(world);
+					ChickenEntity chicken = EntityType.CHICKEN.create(world);
+					if (chicken == null) {
+						// chicken factory broke
+						continue;
+					}
 					
 					double angle = world.rand.nextDouble() * Math.PI * 2;
 					double xOff = Math.cos(angle) * 0.2;
@@ -101,44 +105,43 @@ public class ChickenNuggetCommonEvents {
 					if(type == SpawnType.CRAFTED) {
 						chicken.addTag(craftedTag);
 					} else if(type == SpawnType.CASTED) {
-						chicken.motionY = 0.5;
+						chicken.setMotion(chicken.getMotion().add(0, 0.5, 0));
 						chicken.noClip = true;
 						chicken.addTag(castedTag);
 					}
 					
 					if(lots) {
 						//So they don't immediately cram themselves to death lmao
-						chicken.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 5, 5));
+						chicken.addPotionEffect(new EffectInstance(Effects.RESISTANCE, 5, 5));
 						//Boing!!!
-						chicken.motionY = 0.2;
+						chicken.setMotion(chicken.getMotion().add(0, 0.2, 0));
 					}
 					
-					world.spawnEntity(chicken);
+					world.addEntity(chicken);
 					
 					world.playSound(null, pos, SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.NEUTRAL, 1, world.rand.nextFloat() * 0.5f + 0.75f);
 				}
 			}
 		}
 		
-		for(EntityChicken ent : world.getEntities(EntityChicken.class, (ent) -> true)) {
+		for(Entity ent : world.getEntities(EntityType.CHICKEN, ent -> true)) {
 			boolean hasCraftedTag = ent.getTags().contains(craftedTag);
 			boolean hasHeadlessTag = ent.getTags().contains(headlessTag);
 			boolean onTable = world.getBlockState(ent.getPosition().down()).getBlock() == Blocks.CRAFTING_TABLE;
 			
 			if(!hasCraftedTag && onTable) {
-				boolean babby = ent.getGrowingAge() < 0;
+				boolean babby = ((AgeableEntity)ent).getGrowingAge() < 0;
 				int nuggetCount = babby ? 5 : 9;
 				if(hasHeadlessTag) nuggetCount--;
 				
 				for(int i = 0; i < nuggetCount; i++) {
-					EntityItem nug = new EntityItem(world, ent.posX, ent.posY, ent.posZ, new ItemStack(ChickenNuggetItems.RAW_NUGGET));
-					nug.motionX *= 3;
-					nug.motionZ *= 3; //lol
+					ItemEntity nug = new ItemEntity(world, ent.posX, ent.posY, ent.posZ, new ItemStack(ChickenNuggetItems.RAW_NUGGET));
+					nug.setMotion(nug.getMotion().mul(3, 0, 3)); // lol
 					nug.setPickupDelay(30);
-					world.spawnEntity(nug);
+					world.addEntity(nug);
 				}
 				world.playSound(null, ent.posX, ent.posY, ent.posZ, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.NEUTRAL, .5f, babby ? 2f : 1.3f);
-				ent.setDead();
+				ent.remove();
 				continue;
 			}
 			
@@ -153,15 +156,15 @@ public class ChickenNuggetCommonEvents {
 			}
 		}
 		
-		world.profiler.endSection();
+		world.getProfiler().endSection();
 	}
 	
 	@SubscribeEvent
 	public static void attackChicken(AttackEntityEvent e) {
-		if (!(e.getTarget() instanceof EntityChicken)) return;
-		EntityPlayer player = e.getEntityPlayer();
-		if (player.getHeldItemMainhand().getItem() instanceof ItemAxe) {
-			EntityChicken target = (EntityChicken) e.getTarget();
+		if (!(e.getTarget() instanceof ChickenEntity)) return;
+		PlayerEntity player = e.getPlayer();
+		if (player.getHeldItemMainhand().getToolTypes().contains(ToolType.AXE)) {
+			ChickenEntity target = (ChickenEntity) e.getTarget();
 			if (target.getTags().contains(headlessTag)) {
 				return; // Already been made headless
 			}
@@ -176,11 +179,10 @@ public class ChickenNuggetCommonEvents {
 				double posX = target.posX + (Math.cos(calculatedAngle) / 4.0);
 				double posZ = target.posZ + (Math.sin(calculatedAngle) / 4.0);
 				double posY = target.posY + 0.5;
-				EntityItem head = new EntityItem(world, posX, posY, posZ, new ItemStack(ChickenNuggetBlocks.CHICKEN_HEAD_BLOCK));
-				head.motionX = Math.cos(calculatedAngle) / 6.0F;
-				head.motionZ = Math.sin(calculatedAngle) / 6.0F;
+				ItemEntity head = new ItemEntity(world, posX, posY, posZ, new ItemStack(ChickenNuggetBlocks.CHICKEN_HEAD_BLOCK));
+				head.setMotion(Math.cos(calculatedAngle) / 6.0F, head.getMotion().getY(), Math.sin(calculatedAngle) / 6.0F);
 				head.setPickupDelay(15);
-				world.spawnEntity(head);
+				world.addEntity(head);
 				
 				// pop!
 				world.playSound(null, posX, posY, posZ, SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.NEUTRAL, .5f, 1.0F);
@@ -193,8 +195,8 @@ public class ChickenNuggetCommonEvents {
 
 	@SubscribeEvent
 	public static void chickenJoinedWorld(EntityJoinWorldEvent e) {
-		if (e.getEntity() instanceof EntityChicken && e.getEntity().getTags().contains(headlessTag)) {
-			EntityChicken chicken = (EntityChicken) e.getEntity();
+		if (e.getEntity() instanceof ChickenEntity && e.getEntity().getTags().contains(headlessTag)) {
+			ChickenEntity chicken = (ChickenEntity) e.getEntity();
 			
 			PacketUpdateChicken.syncToClients(chicken);
 			//Reset the aitask since these are not saved to nbt
@@ -204,8 +206,8 @@ public class ChickenNuggetCommonEvents {
 
 	@SubscribeEvent
 	public static void playerStartedTrackingChicken(PlayerEvent.StartTracking e) {
-		if (e.getTarget() instanceof EntityChicken && e.getTarget().getTags().contains(headlessTag)) {
-			PacketUpdateChicken.syncToClient((EntityChicken) e.getTarget(), e.getEntityPlayer());
+		if (e.getTarget() instanceof ChickenEntity && e.getTarget().getTags().contains(headlessTag)) {
+			PacketUpdateChicken.syncToClient((ChickenEntity) e.getTarget(), e.getPlayer());
 		}
 	}
 }

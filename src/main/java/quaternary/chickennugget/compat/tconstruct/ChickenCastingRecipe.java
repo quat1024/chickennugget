@@ -1,6 +1,6 @@
 package quaternary.chickennugget.compat.tconstruct;
-
-import net.minecraft.init.Items;
+/*
+import net.minecraft.item.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import quaternary.chickennugget.ChickenNuggetFluids;
@@ -43,3 +43,4 @@ public class ChickenCastingRecipe implements ICastingRecipe {
 		return 144;
 	}
 }
+*/

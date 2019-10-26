@@ -1,5 +1,5 @@
 package quaternary.chickennugget.compat.tconstruct.jei;
-
+/*
 import com.google.common.collect.ImmutableList;
 
 import mezz.jei.api.ingredients.IIngredients;
@@ -26,3 +26,4 @@ public class RecipeWrapperCastChicken extends CastingRecipeWrapper {
 		ingredients.setOutputs(ItemStack.class, ImmutableList.of());
 	}
 }
+*/

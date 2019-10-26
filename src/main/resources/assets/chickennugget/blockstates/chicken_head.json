@@ -1,18 +1,19 @@
 {
-	"forge_marker": 1,
-	"defaults": {
-		"model": "chickennugget:chicken_head"
-	},
-	"variants": {
-		"normal": [{}],
-		"inventory": [{}],
-		"facing": {
-			"north": {},
-			"south": {"y": 180},
-			"west": {"y": 270},
-			"east": {"y": 90},
-			"up": {},
-			"down": {}
-		}
-	}
+  "variants": {
+    "facing=north": {
+      "model": "chickennugget:block/chicken_head"
+    },
+    "facing=south": {
+      "model": "chickennugget:block/chicken_head",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "chickennugget:block/chicken_head",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "chickennugget:block/chicken_head",
+      "y": 90
+    }
+  }
 }

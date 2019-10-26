@@ -1,6 +1,6 @@
 package quaternary.chickennugget.compat.tconstruct;
-
-import net.minecraft.entity.passive.EntityChicken;
+/*
+import net.minecraft.entity.passive.ChickenEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.FluidStack;
@@ -22,6 +22,7 @@ public final class TinkersCompat {
 		TinkerRegistry.registerTableCasting(new ItemStack(ChickenNuggetItems.COOKED_NUGGET), TinkerSmeltery.castNugget, ChickenNuggetFluids.chickenFluid, 16);
 		TinkerRegistry.registerBasinCasting(new ChickenCastingRecipe());
 		//144mb, killed by ChickenNuggetTinkersCommonEvents
-		TinkerRegistry.registerEntityMelting(EntityChicken.class, new FluidStack(ChickenNuggetFluids.chickenFluid, 144));
+		TinkerRegistry.registerEntityMelting(ChickenEntity.class, new FluidStack(ChickenNuggetFluids.chickenFluid, 144));
 	}
 }
+*/

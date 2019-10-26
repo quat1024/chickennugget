@@ -1,5 +1,5 @@
 package quaternary.chickennugget.compat.tconstruct.jei;
-
+/*
 import mezz.jei.api.gui.IDrawable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
@@ -43,3 +43,4 @@ public class RecipeCategoryMeltChicken extends SmeltingRecipeCategory {
 		return ChickenNuggetJEIPlugin.guiHelper.createDrawable(new ResourceLocation("tconstruct", "textures/gui/jei/smeltery.png"), 0, 0, 160, 60);
 	}
 }
+*/

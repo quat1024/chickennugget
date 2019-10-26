@@ -1,5 +1,5 @@
 package quaternary.chickennugget.compat.tconstruct.jei;
-
+/*
 import mezz.jei.api.IModRegistry;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import net.minecraft.item.ItemStack;
@@ -22,3 +22,4 @@ public class ChickenNuggetTinkersJEIUtil {
 		reg.addRecipeCatalyst(new ItemStack(TinkerSmeltery.smelteryController), RecipeCategoryMeltChicken.UID);
 	}
 }
+*/
