@@ -1,58 +1,65 @@
 package quaternary.chickennugget;
 
 import net.minecraft.block.Block;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
+import net.minecraft.block.FlowingFluidBlock;
+import net.minecraft.block.material.Material;
+import net.minecraft.fluid.FlowingFluid;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.item.BucketItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.BlockFluidClassic;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
+import net.minecraft.util.SoundEvents;
+import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.registries.IForgeRegistry;
-import quaternary.chickennugget.block.BlockFluidChicken;
 
-public final class ChickenNuggetFluids {
+final class ChickenNuggetFluids {
 	public static final class RegistryNames {
 		private RegistryNames() {}
-		
-		public static final String CHICKEN_FLUID = "chicken";
-		public static final String CHICKEN_FLUID_BLOCK = "fluid_chicken";
+
+		static final String CHICKEN_FLUID = "chicken";
+		static final String CHICKEN_FLUID_FLOWING = "chicken_flowing";
+		static final String CHICKEN_FLUID_BLOCK = "fluid_chicken";
+		static final String CHICKEN_FLUID_BUCKET = "fluid_chicken_bucket";
 	}
-	
-	public static Fluid chickenFluid = null;
-	public static BlockFluidClassic chickenFluidBlock = null;
-	
-	public static void registerFluids() {
-		chickenFluid = FluidRegistry.getFluid(RegistryNames.CHICKEN_FLUID);
-		if(chickenFluid == null) {
-			chickenFluid = new Fluid(
-				RegistryNames.CHICKEN_FLUID,
-				new ResourceLocation(ChickenNugget.MODID, "chicken_still"),
-				new ResourceLocation(ChickenNugget.MODID, "chicken_flowing")
-			);
-			chickenFluid.setViscosity(2000);
-			chickenFluid.setDensity(2000);
-			chickenFluid.setTemperature(600);
-			
-			chickenFluid.setEmptySound(SoundEvents.ENTITY_CHICKEN_DEATH);
-			chickenFluid.setFillSound(SoundEvents.ENTITY_CHICKEN_HURT);
-			
-			FluidRegistry.registerFluid(chickenFluid);
-			FluidRegistry.addBucketForFluid(chickenFluid);
-		}
+
+	private static FlowingFluid chickenFluid = null;
+	private static FlowingFluid chickenFluidFlowing = null;
+	private static FlowingFluidBlock chickenFluidBlock = null;
+	private static BucketItem chickenFluidBucket = null;
+
+	static void registerFluids(IForgeRegistry<Fluid> reg) {
+		// TODO: figure out how to make it do collisions correctly, and burn entities like lava
+		ForgeFlowingFluid.Properties props = new ForgeFlowingFluid.Properties(() -> chickenFluid, () -> chickenFluidFlowing,
+				FluidAttributes.builder(new ResourceLocation(ChickenNugget.MODID, "chicken_still"), new ResourceLocation(ChickenNugget.MODID, "chicken_flowing"))
+						.viscosity(2000)
+						.density(2000)
+						.temperature(600)
+						.color(0xFFFFFFFF)
+						.sound(SoundEvents.ENTITY_CHICKEN_HURT, SoundEvents.ENTITY_CHICKEN_DEATH))
+				.bucket(() -> chickenFluidBucket)
+				.block(() -> chickenFluidBlock)
+				.levelDecreasePerBlock(2) //Slow like lava
+				.slopeFindDistance(2);
+		chickenFluid = new ForgeFlowingFluid.Source(props);
+		chickenFluid.setRegistryName(new ResourceLocation(ChickenNugget.MODID, RegistryNames.CHICKEN_FLUID));
+		reg.register(chickenFluid);
+		chickenFluidFlowing = new ForgeFlowingFluid.Flowing(props);
+		chickenFluidFlowing.setRegistryName(new ResourceLocation(ChickenNugget.MODID, RegistryNames.CHICKEN_FLUID_FLOWING));
+		reg.register(chickenFluidFlowing);
 	}
-	
-	public static void registerBlocks(IForgeRegistry<Block> reg) {
+
+	static void registerBlocks(IForgeRegistry<Block> reg) {
 		//Oh look putting half the registerBlocks
-		chickenFluidBlock = new BlockFluidChicken();
+		chickenFluidBlock = new FlowingFluidBlock(() -> chickenFluid, Block.Properties.create(Material.WATER).doesNotBlockMovement().hardnessAndResistance(100.0F).noDrops());
 		chickenFluidBlock.setRegistryName(new ResourceLocation(ChickenNugget.MODID, RegistryNames.CHICKEN_FLUID_BLOCK));
-		chickenFluidBlock.setTranslationKey(ChickenNugget.MODID + '.' + RegistryNames.CHICKEN_FLUID_BLOCK);
 		reg.register(chickenFluidBlock);
 	}
-	
-	public static void populateCreativeTabWithFluids(NonNullList<ItemStack> itemList) {
-		itemList.add(FluidUtil.getFilledBucket(new FluidStack(chickenFluid, 1000)));
+
+	static void registerItems(IForgeRegistry<Item> reg) {
+		chickenFluidBucket = new BucketItem(() -> chickenFluid, new Item.Properties().containerItem(Items.BUCKET).maxStackSize(1).group(ChickenNugget.TAB));
+		chickenFluidBucket.setRegistryName(new ResourceLocation(ChickenNugget.MODID, RegistryNames.CHICKEN_FLUID_BUCKET));
+		reg.register(chickenFluidBucket);
 	}
 }

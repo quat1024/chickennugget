@@ -1,7 +1,7 @@
 package quaternary.chickennugget.compat.tconstruct.jei;
-
+/*
 import mezz.jei.api.ingredients.IIngredients;
-import net.minecraft.init.Items;
+import net.minecraft.item.Items;
 import net.minecraftforge.fluids.FluidStack;
 import quaternary.chickennugget.ChickenNuggetFluids;
 import slimeknights.mantle.util.RecipeMatch;
@@ -18,3 +18,4 @@ public class RecipeWrapperMeltChicken extends SmeltingRecipeWrapper {
 		ingredients.setOutputs(FluidStack.class, outputs);
 	}
 }
+*/

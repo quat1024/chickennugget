@@ -1,58 +1,67 @@
 package quaternary.chickennugget.compat.jei;
 
+import com.mojang.blaze3d.platform.GLX;
+import com.mojang.blaze3d.platform.GlStateManager;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.entity.passive.EntityChicken;
-import net.minecraft.init.Blocks;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.passive.ChickenEntity;
 import net.minecraft.item.ItemStack;
 import quaternary.chickennugget.ChickenNuggetCommonEvents;
 
+import java.util.WeakHashMap;
+
 public class RenderingWeirdness {
 	private RenderingWeirdness() {}
+
+	//This is probably overkill..... but I like computeIfAbsent
+	private static final WeakHashMap<ClientWorld, ChickenEntity> cachedChickens = new WeakHashMap<>();
 	
-	private static final EntityChicken chicky = new EntityChicken(null);
-	
-	public static void drawChicken(int x, int y, boolean small) {
-		Minecraft mc = Minecraft.getMinecraft();
-		chicky.world = mc.world;
+	static void drawChicken(int x, int y, boolean small) {
+		Minecraft mc = Minecraft.getInstance();
+		ChickenEntity chicky = cachedChickens.computeIfAbsent(mc.world, EntityType.CHICKEN::create);
+		if (chicky == null) return;
 		
 		//Based a little bit on Just Enough Resource's gui entity renderer.
 		GlStateManager.pushMatrix();
 		GlStateManager.enableColorMaterial();
-		GlStateManager.translate(x, y, 120);
+		GlStateManager.translatef(x, y, 120);
 		if (small) {
-			GlStateManager.scale(20, -20, 20);
+			GlStateManager.scalef(20, -20, 20);
 		} else {
-			GlStateManager.scale(40, -40, 40);
+			GlStateManager.scalef(40, -40, 40);
 		}
-		GlStateManager.rotate(30f, 1f, 0f, 0f);
-		GlStateManager.rotate(45f, 0f, 1f, 0f);
+		GlStateManager.rotatef(30f, 1f, 0f, 0f);
+		GlStateManager.rotatef(45f, 0f, 1f, 0f);
 		RenderHelper.enableStandardItemLighting();
-		
+
 		mc.getRenderManager().renderEntity(chicky, 0, 0, 0, 0, 0, false);
 		
 		RenderHelper.disableStandardItemLighting();
 		GlStateManager.disableRescaleNormal();
-		GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-		GlStateManager.disableTexture2D();
-		GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+
+		GlStateManager.activeTexture(GLX.GL_TEXTURE1);
+		GlStateManager.disableTexture();
+		GlStateManager.activeTexture(GLX.GL_TEXTURE0);
 		GlStateManager.popMatrix();
 	}
 	
-	public static void drawHeadlessChicken(int x, int y) {
+	static void drawHeadlessChicken(int x, int y) {
+		ChickenEntity chicky = cachedChickens.computeIfAbsent(Minecraft.getInstance().world, EntityType.CHICKEN::create);
+		if (chicky == null) return;
 		chicky.addTag(ChickenNuggetCommonEvents.headlessTag);
 		drawChicken(x, y, false);
 		chicky.getTags().remove(ChickenNuggetCommonEvents.headlessTag);
 	}
 	
-	public static void drawCraftingTable(int x, int y) {		
+	static void drawCraftingTable(int x, int y) {
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(x, y, 0);
-		GlStateManager.scale(2.7, 2.7, 1);
+		GlStateManager.translatef(x, y, 0);
+		GlStateManager.scalef(2.7f, 2.7f, 1);
 		RenderHelper.enableStandardItemLighting();
-		Minecraft.getMinecraft().getRenderItem().renderItemIntoGUI(new ItemStack(Blocks.CRAFTING_TABLE), 0, 0);
+		Minecraft.getInstance().getItemRenderer().renderItemIntoGUI(new ItemStack(Blocks.CRAFTING_TABLE), 0, 0);
 		RenderHelper.disableStandardItemLighting();
 		
 		GlStateManager.popMatrix();

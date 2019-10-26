@@ -1,0 +1,19 @@
+{
+  "itemGroup.chickennugget": "Chicken Nugget",
+
+  "item.chickennugget.chicken_nugget": "Raw Chicken Nugget",
+  "item.chickennugget.chicken_nugget_cooked": "Chicken Nugget",
+
+  "chickennugget.jei.craft_chicken.title": "Chicken Crafting",
+  "chickennugget.jei.craft_nugget.title": "Chicken Decomposition",
+
+  "fluid.chickennugget.chicken": "Molten Chicken",
+  "item.chickennugget.fluid_chicken_bucket": "Molten Chicken Bucket",
+  "chickennugget.jei.cast_chicken.title": "Chicken Casting",
+  "chickennugget.jei.melt_chicken.title": "Chicken Melting",
+
+  "block.chickennugget.chicken_head": "Chicken Head",
+  "chickennugget.jei.decapitate_chicken.title": "Chicken Decapitation",
+
+  "item.chickennugget.chicken_head.hint": "Makes a great hat."
+}

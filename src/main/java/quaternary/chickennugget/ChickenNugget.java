@@ -1,101 +1,97 @@
 package quaternary.chickennugget;
 
+import net.minecraft.block.Block;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.FurnaceRecipes;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.registries.IForgeRegistry;
 import quaternary.chickennugget.block.ChickenNuggetBlocks;
-import quaternary.chickennugget.compat.tconstruct.TinkersCompat;
+import quaternary.chickennugget.compat.curios.CuriosHandler;
 import quaternary.chickennugget.item.ChickenNuggetItems;
 import quaternary.chickennugget.net.PacketHandler;
 
-@Mod(modid = ChickenNugget.MODID, name = ChickenNugget.NAME, version = ChickenNugget.VERSION)
-@Mod.EventBusSubscriber(modid = ChickenNugget.MODID)
+@Mod(ChickenNugget.MODID)
 public class ChickenNugget {
 	public static final String MODID = "chickennugget";
-	public static final String NAME = "Chicken Nugget";
-	public static final String VERSION = "GRADLE:VERSION";
-	
+	private static final String NAME = "Chicken Nugget";
+
 	public static final Logger LOGGER = LogManager.getLogger(NAME);
-	
+
+	@SuppressWarnings("WeakerAccess") // TiCon integration uses this
 	public static boolean tinkersCompat = false;
-	public static boolean baublesCompat = false;
-	
-	static {
-		FluidRegistry.enableUniversalBucket();
+	public static boolean curiosCompat = false;
+
+	public ChickenNugget() {
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupCommon);
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupIMC);
+
+		tinkersCompat = ModList.get().isLoaded("tconstruct");
+		curiosCompat = ModList.get().isLoaded("curios");
+	}
+
+	private void setupCommon(final FMLCommonSetupEvent event) {
+		PacketHandler.registerMessages();
+	}
+
+	private void setupIMC(final InterModEnqueueEvent evt) {
+		if (curiosCompat) {
+			CuriosHandler.registerHeadSlot();
+		}
+	}
+
+	@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = MODID)
+	public static class RegistryEvents {
+		@SubscribeEvent
+		public static void onBlocksRegistry(final RegistryEvent.Register<Block> e) {
+			ChickenNuggetBlocks.registerBlocks(e.getRegistry());
+			ChickenNuggetFluids.registerBlocks(e.getRegistry());
+		}
+
+		@SubscribeEvent
+		public static void onItemsRegistry(final RegistryEvent.Register<Item> e) {
+			ChickenNuggetItems.registerItems(e.getRegistry());
+			ChickenNuggetFluids.registerItems(e.getRegistry());
+		}
+
+		@SubscribeEvent
+		public static void onRecipesRegistry(final RegistryEvent.Register<IRecipeSerializer<?>> e) {
+			e.getRegistry().register(CraftChickenRecipe.SERIALIZER);
+		}
+
+		@SubscribeEvent
+		public static void onFluidsRegistry(final RegistryEvent.Register<Fluid> e) {
+			ChickenNuggetFluids.registerFluids(e.getRegistry());
+		}
 	}
 	
-	public static final CreativeTabs TAB = new CreativeTabs(MODID) {
-		@SideOnly(Side.CLIENT)
+	public static final ItemGroup TAB = new ItemGroup(MODID) {
 		@Override
 		public ItemStack createIcon() {
 			return new ItemStack(ChickenNuggetItems.RAW_NUGGET);
 		}
-		
-		@SideOnly(Side.CLIENT)
-		@Override
-		public void displayAllRelevantItems(NonNullList<ItemStack> itemList) {
-			super.displayAllRelevantItems(itemList);
-			
-			ChickenNuggetFluids.populateCreativeTabWithFluids(itemList);
-		}
 	};
 	
-	@SubscribeEvent
-	public static void blocks(RegistryEvent.Register<Block> e) {
-		ChickenNuggetFluids.registerBlocks(e.getRegistry());
-		ChickenNuggetBlocks.registerBlocks(e.getRegistry());
-	}
-	
-	@SubscribeEvent
-	public static void items(RegistryEvent.Register<Item> e) {
-		ChickenNuggetItems.registerItems(e.getRegistry());
-	}
-	
-	@Mod.EventHandler
-	public static void preinit(FMLPreInitializationEvent e) {
-		ChickenNuggetFluids.registerFluids();
-		PacketHandler.registerMessages(MODID);
-		
-		if(Loader.isModLoaded("tconstruct")) {
-			tinkersCompat = true;
-			TinkersCompat.preinit();
-		}
-		if(Loader.isModLoaded("baubles")) {
-			baublesCompat = true;
-		}
-	}
-	
-	@Mod.EventHandler
-	public static void init(FMLInitializationEvent e) {
-		FurnaceRecipes.instance().addSmeltingRecipe(new ItemStack(ChickenNuggetItems.RAW_NUGGET), new ItemStack(ChickenNuggetItems.COOKED_NUGGET), 0.1f);
-		
-		if(tinkersCompat) {
-			TinkersCompat.init();
-		}
-	}
-	
-	@SubscribeEvent
-	public static void irecipes(RegistryEvent.Register<IRecipe> e) {
-		IForgeRegistry<IRecipe> reg = e.getRegistry();
-		
-		reg.register(new CraftChickenRecipe().setRegistryName(new ResourceLocation(MODID, "craft_chicken")));
-	}
+//	@Mod.EventHandler
+//	public static void preinit(FMLPreInitializationEvent e) {
+//		if(Loader.isModLoaded("tconstruct")) {
+//			TinkersCompat.preinit();
+//		}
+//	}
+//
+//	@Mod.EventHandler
+//	public static void init(FMLInitializationEvent e) {
+//		if(tinkersCompat) {
+//			TinkersCompat.init();
+//		}
+//	}
 }

@@ -1,0 +1,17 @@
+modLoader="javafml" #mandatory
+loaderVersion="[28,)" #mandatory (28 is current forge version)
+issueTrackerURL="https://github.com/quat1024/chickennugget/issues" #optional
+[[mods]] #mandatory
+modId="chickennugget" #mandatory
+version="${file.jarVersion}" #mandatory
+displayName="Chicken Nugget" #mandatory
+#updateJSONURL="http://myurl.me/" #optional
+displayURL="https://www.curseforge.com/minecraft/mc-mods/chicken-nugget" #optional
+#logoFile="examplemod.png" #optional
+credits="This is neptunepink's fault even though it's really not" #optional
+authors="quaternary" #optional
+description='''
+You've heard of gold nuggets, bronze nuggets, copper nuggets, and iron nuggets. But have you heard of chicken nuggets?
+
+They work exactly like other metal nuggets, but instead of using an ingot, you use a chicken. They are of course convertible back and forth between nuggets and chickens. Useful for, I dunno, chicken storage. You can cook and eat them too; they can be consumed much quicker than normal food.
+'''
