@@ -20,5 +20,6 @@ public class PacketHandler {
 
 	public static void registerMessages() {
 		INSTANCE.registerMessage(packetId++, PacketUpdateChicken.class, PacketUpdateChicken::encode, PacketUpdateChicken::decode, PacketUpdateChicken::handle);
+		INSTANCE.registerMessage(packetId++, PacketPlayCluck.class, PacketPlayCluck::encode, PacketPlayCluck::decode, PacketPlayCluck::handle);
 	}
 }

@@ -1,21 +1,27 @@
 package quaternary.chickennugget;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.ai.brain.memory.MemoryModuleType;
+import net.minecraft.entity.ai.brain.schedule.Activity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import quaternary.chickennugget.ai.RunFromCluckTask;
 import quaternary.chickennugget.block.ChickenNuggetBlocks;
+import quaternary.chickennugget.client.UntitledChickenGame;
 import quaternary.chickennugget.compat.curios.CuriosHandler;
 import quaternary.chickennugget.item.ChickenNuggetItems;
 import quaternary.chickennugget.net.PacketHandler;
@@ -23,7 +29,7 @@ import quaternary.chickennugget.net.PacketHandler;
 @Mod(ChickenNugget.MODID)
 public class ChickenNugget {
 	public static final String MODID = "chickennugget";
-	private static final String NAME = "Chicken Nugget";
+	public static final String NAME = "Chicken Nugget";
 
 	public static final Logger LOGGER = LogManager.getLogger(NAME);
 
@@ -34,6 +40,7 @@ public class ChickenNugget {
 	public ChickenNugget() {
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupCommon);
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupIMC);
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
 
 		tinkersCompat = ModList.get().isLoaded("tconstruct");
 		curiosCompat = ModList.get().isLoaded("curios");
@@ -47,6 +54,10 @@ public class ChickenNugget {
 		if (curiosCompat) {
 			CuriosHandler.registerHeadSlot();
 		}
+	}
+
+	private void setupClient(final FMLClientSetupEvent evt) {
+		UntitledChickenGame.setupClient();
 	}
 
 	@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = MODID)
@@ -71,6 +82,16 @@ public class ChickenNugget {
 		@SubscribeEvent
 		public static void onFluidsRegistry(final RegistryEvent.Register<Fluid> e) {
 			ChickenNuggetFluids.registerFluids(e.getRegistry());
+		}
+
+		@SubscribeEvent
+		public static void onMemoryModuleRegistry(final RegistryEvent.Register<MemoryModuleType<?>> e) {
+			e.getRegistry().register(RunFromCluckTask.LAST_CLUCK.setRegistryName(new ResourceLocation(MODID, "last_cluck")));
+		}
+
+		@SubscribeEvent
+		public static void onActivityRegistry(final RegistryEvent.Register<Activity> e) {
+			e.getRegistry().register(RunFromCluckTask.RUN_FROM_CLUCK.setRegistryName(new ResourceLocation(MODID, "run_from_cluck")));
 		}
 	}
 	
