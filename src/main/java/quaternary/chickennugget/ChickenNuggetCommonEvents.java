@@ -188,7 +188,7 @@ public class ChickenNuggetCommonEvents {
 				world.playSound(null, posX, posY, posZ, SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.NEUTRAL, .5f, 1.0F);
 				
 				//make it run around like, well, like a headless chicken
-				AIHelpers.scareChickenForever(target);
+				AIHelpers.chicken.add(target);
 			}
 		}
 	}
@@ -200,7 +200,7 @@ public class ChickenNuggetCommonEvents {
 			
 			PacketUpdateChicken.syncToClients(chicken);
 			//Reset the aitask since these are not saved to nbt
-			AIHelpers.scareChickenForever(chicken);
+			AIHelpers.chicken.add(chicken);
 		}
 	}
 

@@ -50,8 +50,8 @@ public class ItemChickenHead extends BlockItem {
 			if(!player.isCreative()) stack.shrink(1);
 			
 			//reset the endless chicken panic
-			AIHelpers.calmDownChickenItsOk(chicken);
-			
+			AIHelpers.chicken.remove(chicken);
+
 			return true;
 		} else {
 			return false;

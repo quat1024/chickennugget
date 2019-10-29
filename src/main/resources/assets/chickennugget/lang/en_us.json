@@ -15,5 +15,7 @@
   "block.chickennugget.chicken_head": "Chicken Head",
   "chickennugget.jei.decapitate_chicken.title": "Chicken Decapitation",
 
-  "item.chickennugget.chicken_head.hint": "Makes a great hat."
+  "item.chickennugget.chicken_head.hint": "Makes a great hat.",
+
+  "key.chickennugget.cluck": "Cluck"
 }
