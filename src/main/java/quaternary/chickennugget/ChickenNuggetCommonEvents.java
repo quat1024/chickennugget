@@ -4,7 +4,9 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.goal.PrioritizedGoal;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.monster.EndermanEntity;
 import net.minecraft.entity.passive.ChickenEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -19,19 +21,19 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import quaternary.chickennugget.ai.AIHelpers;
 import quaternary.chickennugget.block.ChickenNuggetBlocks;
+import quaternary.chickennugget.compat.curios.CuriosHandler;
 import quaternary.chickennugget.item.ChickenNuggetItems;
+import quaternary.chickennugget.item.ItemChickenHead;
 import quaternary.chickennugget.net.PacketUpdateChicken;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
+import java.util.*;
 
 @Mod.EventBusSubscriber(modid = ChickenNugget.MODID)
 public class ChickenNuggetCommonEvents {
@@ -209,5 +211,39 @@ public class ChickenNuggetCommonEvents {
 		if (e.getTarget() instanceof ChickenEntity && e.getTarget().getTags().contains(headlessTag)) {
 			PacketUpdateChicken.syncToClient((ChickenEntity) e.getTarget(), e.getPlayer());
 		}
+	}
+
+	@SubscribeEvent
+	public static void endermanTrackingPlayer(LivingSetAttackTargetEvent e) {
+		Optional.ofNullable(e.getEntityLiving())
+				.filter(EndermanEntity.class::isInstance)
+				.map(EndermanEntity.class::cast)
+				.ifPresent(endermanEntity -> {
+					if (Optional.ofNullable(e.getTarget())
+							.filter(PlayerEntity.class::isInstance)
+							.map(PlayerEntity.class::cast)
+							.filter(player -> {
+								for (ItemStack itemStack : player.getArmorInventoryList()) {
+									if (itemStack.getItem() instanceof ItemChickenHead) {
+										return true;
+									}
+								}
+								if (ChickenNugget.curiosCompat) {
+									return CuriosHandler.wearingChickenHead(player);
+								}
+								return false;
+							})
+							.isPresent()) {
+						//Reset the FindPlayerGoal, so the enderman doesn't think it's trying to locate (due to aggression) the player
+						Optional<PrioritizedGoal> findPlayerGoal = endermanEntity.targetSelector.getRunningGoals().filter(g -> g.getGoal().getClass().getEnclosingClass() == EndermanEntity.class).findFirst();
+						if (findPlayerGoal.isPresent()) {
+							//This branch also calls setAttackTarget(null) implicitly
+							findPlayerGoal.get().resetTask();
+						} else {
+							//Clear the attack target, so the enderman isn't aggressive towards the player
+							endermanEntity.setAttackTarget(null);
+						}
+					}
+				});
 	}
 }
